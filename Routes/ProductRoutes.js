@@ -47,7 +47,7 @@ const productRoute = express.Router();
 
 productRoute.get("/", async (req, res) => {
   const pageSize = 20;
-  const page = Number(req.query.pageNumber) || 0;
+  const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword
     ? {
         $or: [
@@ -84,14 +84,16 @@ productRoute.get("/", async (req, res) => {
     };
     products = await Product.find({ ...keyword, ...categoryKeyword })
       .limit(pageSize)
-      .skip(pageSize * page)
+      // .skip(pageSize * page)
+      .skip((page - 1) * pageSize) // Ajuste del índice a partir de aquí
       .sort({ _id: -1 });
 
     count = await Product.countDocuments({ ...keyword, ...categoryKeyword });
   } else {
     products = await Product.find({ ...keyword })
       .limit(pageSize)
-      .skip(pageSize * page)
+      // .skip(pageSize * page)
+      .skip((page - 1) * pageSize) // Ajuste del índice a partir de aquí
       .sort({ _id: -1 });
   }
 

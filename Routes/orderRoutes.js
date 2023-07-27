@@ -142,9 +142,7 @@ orderRouter.post("/send", async (req, res) => {
     EmailSender({ totalPrice, _id, userName, email });
     EmailSenderAdmin({ totalPrice, _id, userName, email });
     res.json({ msg: "Your message sent successfully" });
-    console.log(req.body);
   } catch (error) {
-    console.log(res);
     res.status(404).json({ msg: "Error ❌" });
   }
 });
@@ -155,7 +153,6 @@ orderRouter.put(
 
   asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
-    console.log(order);
 
     if (order) {
       order.ConfirmandoPago = true;
@@ -177,11 +174,9 @@ orderRouter.put(
   // admin,
   asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
-    console.log(order);
 
     let image;
     if (req.files.image) {
-      console.log(req.files.image);
       const result = await uploadImageComprobante(req.files.image.tempFilePath);
       await fs.remove(req.files.image.tempFilePath);
 
@@ -198,7 +193,6 @@ orderRouter.put(
       const updatedOrder = await order.save();
       return res.status(200).json(updatedOrder);
     } catch (error) {
-      console.log(error);
       return res.status(500).json({ message: error.message });
     }
     // const { name, price, description, image, countInStock, categories } =
